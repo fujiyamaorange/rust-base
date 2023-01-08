@@ -12,7 +12,7 @@
 //     s.len()
 // }
 
-// strはスライスを表す型
+// &strはスライスを表す型
 fn first_word_slice(s: &str) -> &str {
     let bytes = s.as_bytes();
 
