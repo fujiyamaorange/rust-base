@@ -44,14 +44,13 @@ pub fn notify(item: &impl Summary) {
 }
 
 // 上は下の糖衣構文
-pub fn notify<T: Summary>(item: &T) {
-    // 速報！ {}
-    println!("Breaking news! {}", item.summarize());
-}
+// pub fn notify<T: Summary>(item: &T) {
+//     println!("Breaking news! {}", item.summarize());
+// }
 
 // 以下のようの複数のトレイトを+で指定できる
-pub fn notify(item: &(impl Summary + Display)) {}
-pub fn notify<T: Summary + Display>(item: &T) {}
+// pub fn notify(item: &(impl Summary + Display)) {}
+// pub fn notify<T: Summary + Display>(item: &T) {}
 
 // 戻り値としてトレイトを実装した型を指定できる
 // 1種類の型しか返せない(条件によってNewArticleかTweetかなどはできない)
