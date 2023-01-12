@@ -4,28 +4,18 @@ use std::fs::File;
 use std::io::prelude::*;
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        // dbg!(line);
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        // dbg!(line);
-        if line.to_lowercase().contains(&query) {
-            results.push(line);
-        }
-    }
-    results
+    contents
+        .lines()
+        .filter(|line| line.to_lowercase().contains(&query))
+        .collect()
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
@@ -54,15 +44,23 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &Vec<String>) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough args. Please pass 3 args.");
-        }
+    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Did not get a query string"),
+        };
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Did not get a file name."),
+        };
 
         // cloneすることで参照のライフタイムを考慮しなくて良い
         // https://doc.rust-jp.rs/book-ja/ch12-03-improving-error-handling-and-modularity.html#clone%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E4%BB%A3%E5%84%9F
-        let query = args[1].clone();
-        let filename = args[2].clone();
+        // let query = args[1].clone();
+        // let filename = args[2].clone();
+
         // is_errはCASE_SENSITIVEに何かがセットされていればfalseになる
         let case_sensitive = env::var("CASE_SENSITIVE").is_err();
 

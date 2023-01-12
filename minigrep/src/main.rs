@@ -8,9 +8,9 @@ use minigrep::Config;
 
 fn main() {
     // collectは型注釈が必要になることが多い
-    let args: Vec<String> = env::args().collect();
+    // let args: Vec<String> = env::args().collect();
 
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
         // 標準エラー出力(stderr)
         eprintln!("Problem parsing arguments: {}", err);
         process::exit(1);
